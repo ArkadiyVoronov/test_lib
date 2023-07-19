@@ -15,6 +15,7 @@ jobs:
         uses: actions/setup-cmake@v1
       - name: Compile library
         run: cmake .
+      - name: Build library
         run: make
 
   test:
