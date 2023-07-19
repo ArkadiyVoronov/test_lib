@@ -11,13 +11,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up C++
-        uses: actions/setup-cmake@v1
-        with:
-          cmake-version: 3.20.0
-
+      - uses: actions/setup-cmake@v1
       - name: Compile library
-        run: cd lib && cmake . && make
+        run: cmake . && make
 
   test:
     runs-on: ubuntu-latest
@@ -25,4 +21,4 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Run tests
-        run: cd lib && ./tests
+        run: ./tests
