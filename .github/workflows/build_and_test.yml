@@ -12,8 +12,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-cmake@v1
+        with:
+          cmake-version: 3.20.0
+
       - name: Compile library
-        run: cmake . && make
+        run: cd lib && cmake . && make
 
   test:
     runs-on: ubuntu-latest
@@ -21,4 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Run tests
-        run: ./tests
+        run: cd lib && ctest -VV
+
+variables:
+  LIBRARY_TYPE: static
