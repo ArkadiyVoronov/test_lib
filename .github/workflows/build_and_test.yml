@@ -25,6 +25,3 @@ jobs:
       - uses: actions/checkout@v2
       - name: Run tests
         run: cd lib && ctest -VV
-
-variables:
-  LIBRARY_TYPE: static
