@@ -1,4 +1,4 @@
-name: Test
+name: Build and Test
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -16,5 +16,11 @@ jobs:
       - name: Compile library
         run: cmake .
         run: make
+
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
       - name: Run tests
         run: ./tests
