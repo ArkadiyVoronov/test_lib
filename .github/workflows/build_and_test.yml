@@ -10,10 +10,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-cmake@v1
-        with:
-          cmake-version: 3.20.0
+      - uses: actions/checkout@v3
+      - name: Install CMake
+        run: sudo apt-get install cmake
+
+      - name: Install C++ compiler
+        run: sudo apt-get install g++
 
       - name: Compile library
         run: cd lib && cmake . && make
@@ -22,6 +24,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      - name: Install Python
+        run: sudo apt-get install python3-pip
+
+      - name: Install PyTest
+        run: pip3 install pytest
+
       - name: Run tests
-        run: cd lib && ctest -VV
+        run: cd lib && pytest tests
