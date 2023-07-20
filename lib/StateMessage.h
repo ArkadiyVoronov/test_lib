@@ -8,7 +8,7 @@
 
 namespace state_reporter {
     struct StateMessage {
-        ApplicationState state;
+        State state;
         std::string application;
         std::string module;
         std::string function;
@@ -23,6 +23,13 @@ namespace state_reporter {
                 state(state), application(application), module(module), function(function), description(description),
                 timestamp(timestamp) {
 
+            if (module.empty()) {
+                throw std::invalid_argument("module must not be empty");
+            }
+
+            if (application.empty()) {
+                throw std::invalid_argument("application must not be empty");
+            }
         }
     };
 }
