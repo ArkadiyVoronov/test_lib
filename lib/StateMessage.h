@@ -17,7 +17,7 @@ namespace state_reporter {
 
         StateMessage() = default;
 
-        StateMessage(const std::chrono::steady_clock::time_point &timestamp, ApplicationState state,
+        StateMessage(const std::chrono::steady_clock::time_point &timestamp, State state,
                      const std::string &module, const std::string &application, const std::string &function,
                      const std::string &description) :
                 state(state), application(application), module(module), function(function), description(description),
