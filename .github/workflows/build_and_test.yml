@@ -35,9 +35,7 @@ jobs:
         run: echo $LIBRARY_STATUS
 
       - name: Run tests
-        if: [[ $LIBRARY_STATUS == 0 ]]; then:
-          echo "Library is compiled and running. Running tests."
-          pytest tests
-        else
-          echo "Library is not compiled or running. Skipping tests."
+        run: pytest
+    
+
         
