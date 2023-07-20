@@ -16,7 +16,7 @@
 
 #include "State.h"
 #include "StateMessage.h"
-#include "TelemertyMessage.h"
+#include "TelemetryMessage.h"
 
 using namespace std::chrono_literals;
 
@@ -102,6 +102,8 @@ namespace state_reporter {
         std::string telemetry_message_to_json(const details::TelemetryMessage &msg);
 
         std::queue<OutgoingBuffer> outgoing_queue;
+
+        void send_message(const std::string &message);
     };
 }
 #endif
