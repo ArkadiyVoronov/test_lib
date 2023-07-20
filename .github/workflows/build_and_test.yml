@@ -11,7 +11,7 @@ jobs:
           sudo apt-get install build-essential cmake
       - name: Build library
         run: |
-          cmake .
+          cmake lib
           make
       - name: Set up Python environment
         run: |
