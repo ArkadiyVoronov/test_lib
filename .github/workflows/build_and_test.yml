@@ -1,38 +1,24 @@
-name: Build and Test
-
-on:
-  push:
-    branches:
-      - main
-
+name: Test C++ Library
+on: [push]
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Install CMake
-        run: sudo apt-get install cmake
-
-      - name: Install C++ compiler
-        run: sudo apt-get install g++
-
-      - name: Compile library
-        run: cd lib && cmake . && make
-
   test:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v3
-      - name: Install Python
-        run: sudo apt-get install python3-pip
-
-      - name: Install PyTest
-        run: pip3 install pytest
-
-      - name: Check library status
-        run: echo $LIBRARY_STATUS
-
-      - name: Run tests
-        run: pytest tests
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install build-essential cmake
+      - name: Build library
+        run: |
+          cmake .
+          make
+      - name: Set up Python environment
+        run: |
+          python3 -m venv venv
+          venv/bin/pip install pytest
+      - name: Test library
+        run: |
+          venv/bin/pytest tests/
+    environment:
+      PATH:./lib
