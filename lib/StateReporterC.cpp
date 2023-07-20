@@ -3,6 +3,13 @@
 
 extern "C"
 {
+enum ApplicationState {
+    APPLICATION_STATE_UNKNOWN,
+    APPLICATION_STATE_NORMAL,
+    APPLICATION_STATE_ERROR,
+    APPLICATION_STATE_WARNING
+};
+
 const char *StateReporter_init(const char *module, const char *app) {
     try {
         state_reporter::StateReporter::getInstance().init(std::string(ip), port, std::string(module), std::string(app));
@@ -17,17 +24,15 @@ void StateReporter_stop() {
 }
 
 void StateReporter_set_value(const char *value, const char *function, const char *description) {
-	double val = atof(value);
-	ApplicationState state = APPLICATION_STATE_UNKNOWN;
-	if (val > -2 && val < 4){
-		state = APPLICATION_STATE_NORMAL;
-	}
-	else if (val >= 4 && val < 7){
-		state = APPLICATION_STATE_ERROR;
-	}
-	else if (val >= 7 && val < 10){
-		state = APPLICATION_STATE_WARNING;
-	}
+    double val = std::stod(value);
+    ApplicationState state = APPLICATION_STATE_UNKNOWN;
+    if (val > -2 && val < 4) {
+        state = APPLICATION_STATE_NORMAL;
+    } else if (val >= 4 && val < 7) {
+        state = APPLICATION_STATE_ERROR;
+    } else if (val >= 7 && val < 10) {
+        state = APPLICATION_STATE_WARNING;
+    }
     state_reporter::StateReporter::getInstance().set_permanent_state(std::string(function), state, std::string(description));
 }
 
