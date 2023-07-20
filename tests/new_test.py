@@ -1,6 +1,5 @@
 import pytest
-
-from library import StateReporter
+import library
 
 
 def test_init():
@@ -10,7 +9,7 @@ def test_init():
     #
     # The StateReporter class should be initialized with the specified module name, application name, state, and description.
 
-    reporter = StateReporter("Test_Module", "Test_app")
+    reporter = library.StateReporter("Test_Module", "Test_app")
     assert reporter.module == "Test_Module"
     assert reporter.app == "Test_app"
     assert reporter.state == "0"
@@ -24,7 +23,7 @@ def test_set_value():
     #
     # The StateReporter class should set the value for the specified function name and description.
 
-    reporter = StateReporter("Test_Module", "Test_app")
+    reporter = library.StateReporter("Test_Module", "Test_app")
     reporter.set_value(3.0, "Test_Function", "3.0")
     assert reporter.state == "0"
     assert reporter.desc == "3.0"
@@ -37,7 +36,7 @@ def test_stop():
     #
     # The StateReporter class should stop the reporting process.
 
-    reporter = StateReporter("Test_Module", "Test_app")
+    reporter = library.StateReporter("Test_Module", "Test_app")
     reporter.stop()
     assert reporter.state == "3"
 
@@ -50,7 +49,7 @@ def test_bad_init():
     # The StateReporter class should raise a ValueError exception.
 
     with pytest.raises(ValueError):
-        StateReporter("", "Test_app")
+        library.StateReporter("", "Test_app")
 
 
 def test_bad_set_value():
@@ -60,7 +59,7 @@ def test_bad_set_value():
     #
     # The StateReporter class should raise a ValueError exception.
 
-    reporter = StateReporter("Test_Module", "Test_app")
+    reporter = library.StateReporter("Test_Module", "Test_app")
     with pytest.raises(ValueError):
         reporter.set_value(3.0, "", "3.0")
     with pytest.raises(ValueError):
@@ -76,7 +75,7 @@ def test_bad_stop():
     #
     # The StateReporter class should raise a ValueError exception.
 
-    reporter = StateReporter("Test_Module", "Test_app")
+    reporter = library.StateReporter("Test_Module", "Test_app")
     reporter.stop()
     with pytest.raises(ValueError):
         reporter.stop()
