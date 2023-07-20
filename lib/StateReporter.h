@@ -13,7 +13,6 @@
 #include <map>
 #include <chrono>
 
-
 #include "State.h"
 #include "StateMessage.h"
 #include "TelemetryMessage.h"
@@ -21,89 +20,89 @@
 using namespace std::chrono_literals;
 
 namespace state_reporter {
-    class StateReporter {
-        const int BUFFER_SIZE = 1024;
-        const std::chrono::milliseconds TIMEOUT = 900ms;
-    public:
-        using OutgoingBuffer = std::pair<std::vector<char>, std::chrono::steady_clock::time_point>;
-    public:
-        void init(const std::string &ip, int16_t port, const std::string &module, const std::string &app);
+  class StateReporter {
+    const int BUFFER_SIZE = 1024;
+    const std::chrono::milliseconds TIMEOUT = 900ms;
+  public:
+    using OutgoingBuffer = std::pair<std::vector<char>, std::chrono::steady_clock::time_point>;
+  public:
+    void init(const std::string &ip, int16_t port, const std::string &module, const std::string &app);
 
-        void send_exception(const std::string &function, State state, const std::string &description);
+    void send_exception(const std::string &function, State state, const std::string &description);
 
-        void send_exception(const std::string &module, const std::string &application, const std::string &function,
+    void send_exception(const std::string &module, const std::string &application, const std::string &function,
+                        State state, const std::string &description);
+
+    void send_telemetry(const std::string &telemetry_param, const std::string &value);
+
+    void send_telemetry(const std::string &module, const std::string &application, const std::string &telemetry_param, const std::string &value);
+
+    void set_permanent_state(const std::string &function, State state, const std::string &description);
+
+    void set_permanent_state(const std::string &module, const std::string &application, const std::string &function,
                             State state, const std::string &description);
 
-        void send_telemetry(const std::string &telemetry_param, const std::string &value);
+    void reset_permanent_state(const std::string &function);
 
-        void send_telemetry(const std::string &module, const std::string &application, const std::string &telemetry_param, const std::string &value);
+    void
+    reset_permanent_state(const std::string &module, const std::string &application, const std::string &function);
 
-        void set_permanent_state(const std::string &function, State state, const std::string &description);
+    void stop() {
+      is_running = false;
+      if (thread.joinable()) {
+        thread.join();
+      }
+    }
 
-        void set_permanent_state(const std::string &module, const std::string &application, const std::string &function,
-                                 State state, const std::string &description);
+    static StateReporter &getInstance() {
+      static StateReporter instance;
+      return instance;
+    }
 
-        void reset_permanent_state(const std::string &function);
+  private:
+    std::string ip;
+    int16_t port = 0;
 
-        void
-        reset_permanent_state(const std::string &module, const std::string &application, const std::string &function);
+    int client_sock = -1;
+    std::string module_def;
+    std::string application_def;
+    std::queue<StateMessage> msgs;
+    std::queue<details::TelemetryMessage> telemetry_msgs;
+    std::map<std::string, StateMessage> permanent_msgs;
+    std::mutex queue_locker;
 
-        void stop() {
-            is_running = false;
-            if (thread.joinable()) {
-                thread.join();
-            }
-        }
+    std::atomic<bool> is_running{};
+    std::thread thread;
 
-        static StateReporter &getInstance() {
-            static StateReporter instance;
-            return instance;
-        }
+    std::string ok_msg;
 
-    private:
-        std::string ip;
-        int16_t port = 0;
+    StateReporter() { is_running = false; }
 
-        int client_sock = -1;
-        std::string module_def;
-        std::string application_def;
-        std::queue<StateMessage> msgs;
-        std::queue<details::TelemetryMessage> telemetry_msgs;
-        std::map<std::string, StateMessage> permanent_msgs;
-        std::mutex queue_locker;
+    StateReporter(const StateReporter &) = delete;
 
-        std::atomic<bool> is_running{};
-        std::thread thread;
+    StateReporter &operator=(StateReporter &) = delete;
 
-        std::string ok_msg;
+    ~StateReporter() {
+      stop();
+    }
 
-        StateReporter() { is_running = false; }
+    void sender();
 
-        StateReporter(const StateReporter &) = delete;
+    void try_to_connect();
 
-        StateReporter &operator=(StateReporter &) = delete;
+    bool is_connected();
 
-        ~StateReporter() {
-            stop();
-        }
+    void prepare_messages();
 
-        void sender();
+    void send_prepared_messages();
 
-        void try_to_connect();
+    std::string state_message_to_json(const StateMessage &msg);
 
-        bool is_connected();
+    std::string telemetry_message_to_json(const details::TelemetryMessage &msg);
 
-        void prepare_messages();
+    std::queue<OutgoingBuffer> outgoing_queue;
 
-        void send_prepared_messages();
-
-        std::string state_message_to_json(const StateMessage &msg);
-
-        std::string telemetry_message_to_json(const details::TelemetryMessage &msg);
-
-        std::queue<OutgoingBuffer> outgoing_queue;
-
-        void send_message(const std::string &message);
-    };
+    void send_message(const std::string &message);
+  };
 }
 #endif
