@@ -29,19 +29,19 @@ namespace state_reporter {
     public:
         void init(const std::string &ip, int16_t port, const std::string &module, const std::string &app);
 
-        void send_exception(const std::string &function, ApplicationState state, const std::string &description);
+        void send_exception(const std::string &function, State state, const std::string &description);
 
         void send_exception(const std::string &module, const std::string &application, const std::string &function,
-                            ApplicationState state, const std::string &description);
+                            State state, const std::string &description);
 
         void send_telemetry(const std::string &telemetry_param, const std::string &value);
 
         void send_telemetry(const std::string &module, const std::string &application, const std::string &telemetry_param, const std::string &value);
 
-        void set_permanent_state(const std::string &function, ApplicationState state, const std::string &description);
+        void set_permanent_state(const std::string &function, State state, const std::string &description);
 
         void set_permanent_state(const std::string &module, const std::string &application, const std::string &function,
-                                 ApplicationState state, const std::string &description);
+                                 State state, const std::string &description);
 
         void reset_permanent_state(const std::string &function);
 
