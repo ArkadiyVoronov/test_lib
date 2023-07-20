@@ -1,5 +1,6 @@
 import pytest
-import library
+
+from library import StateReporter
 
 
 def test_init():
@@ -9,9 +10,9 @@ def test_init():
     #
     # The StateReporter class should be initialized with the specified module name, application name, state, and description.
 
-    reporter = library.StateReporter("Test_Module", "Test_app")
-    assert reporter.module == "Test_Module"
-    assert reporter.app == "Test_app"
+    reporter = StateReporter(module_name="Test_Module", application_name="Test_app")
+    assert reporter.module_name == "Test_Module"
+    assert reporter.application_name == "Test_app"
     assert reporter.state == "0"
     assert reporter.desc == ""
 
@@ -23,8 +24,8 @@ def test_set_value():
     #
     # The StateReporter class should set the value for the specified function name and description.
 
-    reporter = library.StateReporter("Test_Module", "Test_app")
-    reporter.set_value(3.0, "Test_Function", "3.0")
+    reporter = StateReporter(module_name="Test_Module", application_name="Test_app")
+    reporter.set_value(3.0, function_name="Test_Function", description="3.0")
     assert reporter.state == "0"
     assert reporter.desc == "3.0"
 
@@ -36,7 +37,7 @@ def test_stop():
     #
     # The StateReporter class should stop the reporting process.
 
-    reporter = library.StateReporter("Test_Module", "Test_app")
+    reporter = StateReporter(module_name="Test_Module", application_name="Test_app")
     reporter.stop()
     assert reporter.state == "3"
 
@@ -49,7 +50,7 @@ def test_bad_init():
     # The StateReporter class should raise a ValueError exception.
 
     with pytest.raises(ValueError):
-        library.StateReporter("", "Test_app")
+        StateReporter(module_name="", application_name="Test_app")
 
 
 def test_bad_set_value():
@@ -59,13 +60,13 @@ def test_bad_set_value():
     #
     # The StateReporter class should raise a ValueError exception.
 
-    reporter = library.StateReporter("Test_Module", "Test_app")
+    reporter = StateReporter(module_name="Test_Module", application_name="Test_app")
     with pytest.raises(ValueError):
-        reporter.set_value(3.0, "", "3.0")
+        reporter.set_value(3.0, function_name="", description="3.0")
     with pytest.raises(ValueError):
-        reporter.set_value(3.0, "Test_Function", "")
+        reporter.set_value(3.0, function_name="Test_Function", description="")
     with pytest.raises(ValueError):
-        reporter.set_value(3.0, "Test_Function", "3.0")
+        reporter.set_value(3.0, function_name="Test_Function", description="3.0")
 
 
 def test_bad_stop():
@@ -75,7 +76,7 @@ def test_bad_stop():
     #
     # The StateReporter class should raise a ValueError exception.
 
-    reporter = library.StateReporter("Test_Module", "Test_app")
+    reporter = StateReporter(module_name="Test_Module", application_name="Test_app")
     reporter.stop()
     with pytest.raises(ValueError):
         reporter.stop()
